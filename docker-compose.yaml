@@ -1,0 +1,35 @@
+version: '3'
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+
+services:
+  php-fpm:
+    build: ./php-fpm
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./src:/var/www
+
+  webserver:
+    build: ./webserver
+    ports:
+      - 8081:80
+    networks:
+      - frontend
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - php-fpm
+
+  workspace:
+    build: ./workspace
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./src:/var/www
